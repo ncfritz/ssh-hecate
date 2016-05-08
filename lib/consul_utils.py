@@ -20,7 +20,7 @@ def getConn(args):
 
     user_home = passwd[5]
     user_config = os.path.join(user_home, '.hecate/config.json')
-    global_config = '/tmp/ncfritz/.hecate/config.json'
+    global_config = '/etc/hecate/config.json'
 
     log.info('Loading global config.json from %s' % global_config)
     log.info('Loading user config.json from %s' % user_config)
@@ -51,7 +51,7 @@ def getConn(args):
 
     return consul.Consul(host = configuration['consul_host'],
                          port = configuration['consul_port'],
-                         token = configuration['consul_token'],
+                         token = (configuration['consul_token'] if 'conul_token' in configuration else None),
                          scheme = 'http',
                          consistency = 'default',
                          dc = None,
