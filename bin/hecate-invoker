@@ -1,0 +1,2 @@
+#!/bin/sh
+`which python` ./lib/hecate.py $@

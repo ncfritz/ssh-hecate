@@ -8,11 +8,13 @@ from hecate_get import exec_get
 from hecate_list import exec_list
 from hecate_put import exec_put
 from hecate_sync import exec_sync
+from hecate_service import exec_service
 
 # hecate put
 # hecate list
 # hecate get
 # hecate sync
+# hecate daemon
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -61,16 +63,31 @@ if __name__ == "__main__":
     sync_parser = subparsers.add_parser('sync')
     sync_parser.set_defaults(func = exec_sync)
     sync_parser.add_argument('--user', '-u',
-                            default = getpass.getuser(),
+                             default = getpass.getuser(),
                              required = False,
                              help = 'The user to get the public key for, defaults to current user',
                              dest = 'user_name')
     sync_parser.add_argument('--all', '-a',
-                        default = False,
-                        action = 'store_true',
-                        required = False,
-                        help = 'Perform sync for all users',
-                        dest = 'all')
+                             default = False,
+                             action = 'store_true',
+                             required = False,
+                             help = 'Perform sync for all users',
+                             dest = 'all')
+
+    daemon_parser = subparsers.add_parser('daemon')
+    daemon_parser.set_defaults(func = 'exec_service')
+    daemon_parser.add_argument('--frequency', '-f',
+                               type = int,
+                               required = False,
+                               default = 60 * 60 * 3, # three hours
+                               help = 'How often to run the sync in seconds',
+                               dest = 'frequency')
+    daemon_parser.add_argument('--jitter', '-j',
+                               type = int,
+                               default = 60 * 60, # one hour
+                               required = False,
+                               help = 'The amount to potentially jitter the frequenct',
+                               dest = 'jitter')
 
     args = parser.parse_args()
     hecate_util.setupLogging(args)

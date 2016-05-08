@@ -1,12 +1,26 @@
-#!/bin/bash
+#!/bin/sh
 
-SOURCE="${BASH_SOURCE[0]}"
-while [ -h "$SOURCE" ]; do
-    DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
-    SOURCE="$(readlink "$SOURCE")"
-    [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE"
-done
+PROGNAME="$(basename $0)"
+VERSION="latest"
 
-DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+error(){
+  error_code=$1
+  echo "ERROR: $2" >&2
+  echo "($PROGNAME wrapper version: $VERSION, error code: $error_code )" &>2
+  exit $1
+}
 
-/usr/bin/python $DIR/../lib/hecate.py $@
+check_cmd_in_path(){
+  cmd=$1
+  which $cmd > /dev/null 2>&1 || error 1 "$cmd not found!"
+}
+
+check_cmd_in_path docker
+check_cmd_in_path docker-machine
+docker-machine active > /dev/null 2>&1 || error 2 "No active docker-machine VM found."
+
+exec docker run \
+    --interactive \
+    --tty \
+    --rm \
+    "ncfritz/ssh-hecate:$VERSION" "$@"
