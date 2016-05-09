@@ -10,7 +10,10 @@ def getConn(args):
 
     log = logging.getLogger(name='consul_utils')
 
-    configuration = {}
+    configuration = {
+        'consul_host': '127.0.0.1',
+        'consul_port': 8500
+    }
 
     try:
         passwd = pwd.getpwnam(getpass.getuser())
