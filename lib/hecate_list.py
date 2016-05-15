@@ -11,9 +11,9 @@ def exec_list(args):
     log = logging.getLogger(name='hecate_list')
 
     consul_users_path = 'ssh/authorized_keys/'
-    consul_user_path = '%s/%s/' % (consul_users_path, args.user_name)
+    consul_user_path = '%s%s/' % (consul_users_path, args.user_name)
 
-    con = consul_utils.getConn(args)
+    con = consul_utils.get_conn(args)
 
     try:
 
@@ -44,11 +44,12 @@ def exec_list(args):
 
         elif args.type == 'keys':
 
-            if con.kv.get(consul_user_path)[1] is None:
+            keys_result = con.kv.get(consul_user_path, recurse=True, keys=True)
+
+            if keys_result[1] is None:
                 print 'User %s does not exist in Consul' % args.user_name
                 exit(0)
 
-            keys_result = con.kv.get(consul_user_path, keys=True)
             keys = []
 
             for key_entry in keys_result[1]:
@@ -56,6 +57,7 @@ def exec_list(args):
                 key_entry = key_entry[len(consul_user_path)-1:]
 
                 if len(key_entry) > 0:
+                    key_entry = key_entry[1:] if key_entry.startswith('/') else key_entry
                     key_entry = key_entry[:-1] if key_entry.endswith('/') else key_entry
                     keys.append(key_entry)
 
@@ -76,21 +78,22 @@ def exec_list(args):
         log.critical(e)
         exit(1)
 
-def print_columns(list, cols=4, columnwise=True, gap=4):
 
-    if cols > len(list):
-        cols = len(list)
+def print_columns(l, cols=4, columnwise=True, gap=4):
 
-    max_len = max([len(item) for item in list])
+    if cols > len(l):
+        cols = len(l)
+
+    max_len = max([len(item) for item in l])
 
     if columnwise:
-        cols = int(math.ceil(float(len(list)) / float(cols)))
+        cols = int(math.ceil(float(len(l)) / float(cols)))
 
-    plist = [list[i: i + cols] for i in range(0, len(list), cols)]
+    plist = [l[i: i + cols] for i in range(0, len(l), cols)]
 
     if columnwise:
         if not len(plist[-1]) == cols:
-            plist[-1].extend([''] * (len(list) - len(plist[-1])))
+            plist[-1].extend([''] * (len(l) - len(plist[-1])))
 
         plist = zip(*plist)
 

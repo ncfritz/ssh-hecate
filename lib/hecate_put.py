@@ -3,8 +3,8 @@ import logging
 import os
 import pwd
 import socket
-
 import requests
+
 from Crypto.PublicKey import RSA
 
 import consul_utils
@@ -42,13 +42,12 @@ def exec_put(args):
     log.debug('Consul user path ''%s''' % consul_user_path)
     log.debug('Consul public key path ''%s''' % consul_public_key_path)
 
-    con = consul_utils.getConn(args)
+    con = consul_utils.get_conn(args)
 
     try:
         local_key_exists = os.path.exists(id_rsa_key)
         local_public_key_exists = os.path.exists(id_rsa_pub)
-        remote_path_exists = con.kv.get(consul_user_path)[1] is not None
-        remote_public_key_exitsts = remote_path_exists and con.kv.get(consul_public_key_path)[1] is not None
+        remote_public_key_exitsts = con.kv.get(consul_public_key_path)[1] is not None
 
         if args.verbose:
             print 'Using user home: %s' % user_home
@@ -67,9 +66,6 @@ def exec_put(args):
 
         if local_public_key_exists:
             log.warn('Local public exists: %s' % id_rsa_pub)
-
-        if remote_path_exists:
-            log.warn('Remote path exists in Consul: %s' % consul_user_path)
 
         if local_public_key_exists:
             log.warn('Remote public key exists: %s' % consul_public_key_path)
@@ -110,7 +106,7 @@ def exec_put(args):
 
         if skip_local_creation:
             log.info('Reading public key information from %s' % id_rsa_pub)
-            with open (id_rsa_pub, 'r') as local_public_key:
+            with open(id_rsa_pub, 'r') as local_public_key:
                 public_key = local_public_key.read()
         else:
             print 'Generating SSH key pair...'
@@ -141,7 +137,7 @@ def exec_put(args):
         log.info('Uploading public key to Consul: %s' % consul_public_key_path)
 
         if con.kv.put(consul_public_key_path, public_key) is None:
-            print 'Unable to store public key in Consul at path ssh/authorized_keys/%s/' % (user_name, hostname)
+            print 'Unable to store public key in Consul at path %s' % consul_public_key_path
             exit(1)
 
         print 'Public key uploaded successfully... user %s is now provisioned for host %s' % (user_name, hostname)

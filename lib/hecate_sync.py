@@ -14,7 +14,7 @@ def exec_sync(args):
 
     users_to_sync = []
 
-    con = consul_utils.getConn(args)
+    con = consul_utils.get_conn(args)
 
     try:
         if args.all:
@@ -81,7 +81,6 @@ def exec_sync(args):
                         for key_entry in keys_result[1]:
 
                             if key_entry['Value'] is not None:
-                                #print 'Found key for host %s' % key_entry['Key'].split('/')[-1]
                                 sys.stdout.write('.')
                                 authorized_keys.write('%s\n' % key_entry['Value'].strip())
 

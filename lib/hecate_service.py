@@ -30,6 +30,7 @@ def exec_service(args):
     except KeyboardInterrupt:
         print 'Caught keyboard interrupt... exiting'
 
+
 def run_background(args):
 
     log = logging.getLogger(name='hecate_get')

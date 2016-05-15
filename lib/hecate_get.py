@@ -12,14 +12,15 @@ def exec_get(args):
     consul_user_path = 'ssh/authorized_keys/%s/' % args.user_name
     consul_key_path = '%s%s' % (consul_user_path, args.host_name)
 
-    con = consul_utils.getConn(args)
+    con = consul_utils.get_conn(args)
 
     try:
         log.info('Getting key for user ''%s''' % args.user_name)
         log.info('Getting key for host ''%s''' % args.host_name)
         log.debug('Using key path ''%s''' % consul_key_path)
 
-        if con.kv.get(consul_user_path)[1] is None:
+        if con.kv.get(consul_user_path, recurse=True)[1] is None:
+
             print 'User %s does not exist in Consul' % args.user_name
             exit(0)
 
@@ -31,6 +32,7 @@ def exec_get(args):
             log.info('LockIndex: %s' % key['LockIndex'])
             log.info('Key: %s' % key['Key'])
             log.info('Flags: %s' % key['Flags'])
+
             print '\n%s\n' % key['Value'].strip()
 
         else:
