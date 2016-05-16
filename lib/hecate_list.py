@@ -24,6 +24,11 @@ def exec_list(args):
         if args.type == 'users':
 
             users_result = con.kv.get(consul_users_path, keys=True, separator='/')
+
+            if users_result[1] is None:
+                print 'No users found in Consul'
+                exit(0)
+
             users = []
 
             for user_entry in users_result[1]:

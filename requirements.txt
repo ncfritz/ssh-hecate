@@ -1,5 +1,6 @@
 coloredlogs==5.0
-jsonmerge==1.1.0
-python-consul==0.6.0
-pycrypto==2.6.1
 IPy==0.83
+jsonmerge==1.1.0
+pycrypto==2.6.1
+python-consul==0.6.0
+supervisor==3.3.0

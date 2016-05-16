@@ -26,6 +26,10 @@ def exec_sync(args):
 
             users_result = con.kv.get(consul_users_path, keys=True, separator='/')
 
+            if users_result[1] is None:
+                print 'No remote users found for synchronization'
+                exit(0)
+
             for user_entry in users_result[1]:
 
                 user_entry = user_entry[len(consul_users_path):]
