@@ -17,13 +17,13 @@ Hecate simlifies the task of distributing ssh public keys in a network.  Hecate 
 
 ## Hecate Commands
 Hecate contains several sub-commands
-* [`provision`](wiki/provision) - seeds a public key to Consul, creating a private/public key pair is necessary
-* [`list`](wiki/list) - lists users in Consul, or the keys for a specific user
-* [`get`](wiki/get) - retrieves the public key for a user/host combination
-* [`delete`](wiki/delete) - deletes a user from Consul, or a specific key for a user
-* [`sync`](wiki/sync) - synchronizes the `authorized_keys` for all, or a specific user/s
-* [`config`](wiki/config) - displays or edits the Consul configuration
-* [`daemon`](wiki/daemon) - runs the Hecate daemon
+* [`provision`](https://github.com/ncfritz/ssh-hecate/wiki/provision) - seeds a public key to Consul, creating a private/public key pair is necessary
+* [`list`](https://github.com/ncfritz/ssh-hecate/wiki/list) - lists users in Consul, or the keys for a specific user
+* [`get`](https://github.com/ncfritz/ssh-hecate/wiki/get) - retrieves the public key for a user/host combination
+* [`delete`](https://github.com/ncfritz/ssh-hecate/wiki/delete) - deletes a user from Consul, or a specific key for a user
+* [`sync`](https://github.com/ncfritz/ssh-hecate/wiki/sync) - synchronizes the `authorized_keys` for all, or a specific user/s
+* [`config`](https://github.com/ncfritz/ssh-hecate/wiki/config) - displays or edits the Consul configuration
+* [`daemon`](https://github.com/ncfritz/ssh-hecate/wiki/daemon) - runs the Hecate daemon
 
 ## Running the Daemon
 You can run the daemon in the foreground using`hecate daemon` for debugging or testing purposes.  It is recommended that you run the synchronizing daemon as a managed, long lived process using [Supervisord](http://supervisord.org/).  Hecate ships with a sample Supervisord config file in `etc/supervisord.config`.  To run Supervisord locally use the following command:
