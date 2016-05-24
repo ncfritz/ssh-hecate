@@ -21,11 +21,10 @@ from hecate_service import exec_service
 # hecate daemon
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(prog='hecate')
     hecate_util.setup_common_args(parser)
     subparsers = parser.add_subparsers(title='Valid commands',
-                                       description='command',
-                                       help='command help')
+                                       description='command')
 
     put_parser = subparsers.add_parser('provision')
     put_parser.set_defaults(func=exec_put)
@@ -123,7 +122,7 @@ if __name__ == "__main__":
                                type=int,
                                default=60 * 60,  # one hour
                                required=False,
-                               help='The amount to potentially jitter the frequenct',
+                               help='The amount to potentially jitter the frequency',
                                dest='jitter')
 
     args = parser.parse_args()
