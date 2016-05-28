@@ -9,7 +9,7 @@ Hecate simlifies the task of distributing ssh public keys in a network.  Hecate 
 3. SSH to the remote host... no password needed!
 
 ## Installation
-### Install Dependeicies
+### Install Dependencies
 ### Install Hecate
 ### Configure Hecate
 ### Provision a Key
