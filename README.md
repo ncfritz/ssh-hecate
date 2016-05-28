@@ -4,8 +4,8 @@ Hecate simlifies the task of distributing ssh public keys in a network.  Hecate 
 
 1. Run `hecate provision` to generate a SSH private/public key pair.  The public key is uploaded to Consul.  The private key never leaves the host.
 2. Wait.  Remote hosts running the Hecate daemon will periodically connect to Consul and generate a `~/.ssh/authorized_keys` file for each user that:
-  1. Have an account on the remote host AND
-  2. Have keys distributed via Hecate
+  1. Has an account on the remote host AND
+  2. Has keys distributed via Hecate
 3. SSH to the remote host... no password needed!
 
 ## Installation
