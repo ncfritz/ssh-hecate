@@ -60,7 +60,7 @@ def get_conn(args):
                          token=(configuration['consul_token'] if 'conul_token' in configuration else None),
                          scheme='http',
                          consistency='default',
-                         dc=None,
+                         dc=(configuration['consul_dc'] if 'consul_dc' in configuration else None),
                          verify=configuration['consul_verify_ssl'])
 
 

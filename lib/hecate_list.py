@@ -1,9 +1,8 @@
 import logging
-import math
-
 import requests
 
 import consul_utils
+import hecate_util
 
 
 def exec_list(args):
@@ -42,7 +41,7 @@ def exec_list(args):
             if len(users) > 0:
 
                 print 'Found %s user entries in Consul\n' % len(users)
-                print_columns(users)
+                hecate_util.print_columns(users)
                 print
             else:
                 print 'No users found in Consul'
@@ -69,7 +68,7 @@ def exec_list(args):
             if len(keys) > 0:
 
                 print 'Found %s keys for user %s in Consul\n' % (len(keys), args.user_name)
-                print_columns(keys)
+                hecate_util.print_columns(keys)
                 print
             else:
                 print 'No keys found for user %s in Consul' % args.user_name
@@ -82,24 +81,3 @@ def exec_list(args):
         print 'Failed to connect to Consul host!'
         log.critical(e)
         exit(1)
-
-
-def print_columns(l, cols=4, columnwise=True, gap=4):
-
-    if cols > len(l):
-        cols = len(l)
-
-    max_len = max([len(item) for item in l])
-
-    if columnwise:
-        cols = int(math.ceil(float(len(l)) / float(cols)))
-
-    plist = [l[i: i + cols] for i in range(0, len(l), cols)]
-
-    if columnwise:
-        if not len(plist[-1]) == cols:
-            plist[-1].extend([''] * (len(l) - len(plist[-1])))
-
-        plist = zip(*plist)
-
-    print '\n'.join([''.join([c.ljust(max_len + gap) for c in p]) for p in plist])

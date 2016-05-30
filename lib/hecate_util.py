@@ -1,4 +1,5 @@
 import logging
+import math
 import coloredlogs
 
 
@@ -44,10 +45,30 @@ def setup_common_args(parser):
                         default=None,
                         required=False,
                         help='The Consul data center',
-                        dest='consul_data_center')
+                        dest='consul_dc')
     parser.add_argument('--consul-verify-ssl', '-cv',
                         default=False,
                         action='store_true',
                         required=False,
                         help='Verify SSL of Consul host',
                         dest='consul_verify_ssl')
+
+def print_columns(l, cols=4, columnwise=True, gap=4):
+
+    if cols > len(l):
+        cols = len(l)
+
+    max_len = max([len(item) for item in l])
+
+    if columnwise:
+        cols = int(math.ceil(float(len(l)) / float(cols)))
+
+    plist = [l[i: i + cols] for i in range(0, len(l), cols)]
+
+    if columnwise:
+        if not len(plist[-1]) == cols:
+            plist[-1].extend([''] * (len(l) - len(plist[-1])))
+
+        plist = zip(*plist)
+
+    print '\n'.join([''.join([c.ljust(max_len + gap) for c in p]) for p in plist])

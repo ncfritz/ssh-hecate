@@ -35,6 +35,7 @@ def exec_config(args):
         'consul_host': (args_dict['consul_host'] if 'consul_host' in args_dict else None),
         'consul_port': (args_dict['consul_port'] if 'consul_host' in args_dict else None),
         'consul_token': (args_dict['consul_token'] if 'consul_token' in args_dict else None),
+        'consul_dc': (args_dict['consul_dc'] if 'consul_dc' in args_dict else None),
         'consul_verify_ssl': (args_dict['consul_verify_ssl'] if 'consul_verify_ssl' in args_dict else None)
     }
 
@@ -58,6 +59,7 @@ def exec_config(args):
             'consul_host': read_ip(),
             'consul_port': read_port(8500),
             'consul_token': raw_input('Token: '),
+            'consul_dc': raw_input('Data Center: '),
             'consul_verify_ssl': read_boolean()
         }
 
@@ -81,17 +83,19 @@ def exec_config(args):
         }
         config = {}
 
-        print '\n%s | %s | %s | %s | %s' % \
+        print '\n%s | %s | %s | %s | %s | %s' % \
               ('Scope'.rjust(8, ' '),
                'consul_host'.ljust(30, ' '),
                'consul_port'.ljust(11, ' '),
                'consul_token'.ljust(40, ' '),
+               'consul_dc'.ljust(30, ' '),
                'consul_verify_ssl')
-        print '%s-+-%s-+-%s-+-%s-+-%s' % \
+        print '%s-+-%s-+-%s-+-%s-+-%s-+-%s' % \
               (''.ljust(8, '-'),
                ''.ljust(30, '-'),
                ''.ljust(11, '-'),
                ''.ljust(40, '-'),
+               ''.ljust(30, '-'),
                ''.ljust(17, '-'))
 
         for key in ['Default', 'Global', 'User', 'Args']:
@@ -102,22 +106,25 @@ def exec_config(args):
             log.info('Merging config')
             consul_utils.dump_dict(config)
 
-        print '%s-+-%s-+-%s-+-%s-+-%s' % \
+        print '%s-+-%s-+-%s-+-%s-+-%s-+-%s' % \
               (''.ljust(8, '-'),
                ''.ljust(30, '-'),
                ''.ljust(11, '-'),
                ''.ljust(40, '-'),
+               ''.ljust(30, '-'),
                ''.ljust(17, '-'))
         print_config('Merged', config)
         print
 
 
 def print_config(label, config):
-    print '%s | %s | %s | %s | %s' % (label.ljust(8, ' '),
-                                      (config['consul_host'] if 'consul_host' in config else '').ljust(30, ' '),
-                                      (str(config['consul_port']) if 'consul_port' in config else '').ljust(11, ' '),
-                                      (config['consul_token'] if 'consul_token' in config else '').ljust(40, ' '),
-                                      (config['consul_verify_ssl'] if 'consul_verify_ssl' in config else ''))
+    print '%s | %s | %s | %s | %s | %s' % \
+          (label.rjust(8, ' '),
+           (config['consul_host'] if 'consul_host' in config else '').ljust(30, ' '),
+           (str(config['consul_port']) if 'consul_port' in config else '').ljust(11, ' '),
+           (config['consul_token'] if 'consul_token' in config else '').ljust(40, ' '),
+           (config['consul_dc'] if 'consul_dc' in config else '').ljust(30, ' '),
+           (config['consul_verify_ssl'] if 'consul_verify_ssl' in config else ''))
 
 
 def read_ip():

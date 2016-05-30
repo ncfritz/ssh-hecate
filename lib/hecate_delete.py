@@ -4,6 +4,7 @@ import logging
 import requests
 
 import consul_utils
+import hecate_util
 
 
 def exec_delete(args):
@@ -29,8 +30,9 @@ def exec_delete(args):
         print 'Must be run as the currently logged in user or root'
         exit(1)
 
-    consul_user_path = 'ssh/authorized_keys/%s/' % args.user_name
-    consul_key_path = '%s%s/' % (consul_user_path, args.host_name)
+    consul_ssh_path = 'ssh/authorized_keys/'
+    consul_user_path = '%s%s/' % (consul_ssh_path, args.user_name)
+    consul_key_path = '%s%s' % (consul_user_path, args.host_name)
 
     con = consul_utils.get_conn(args)
 
@@ -52,6 +54,23 @@ def exec_delete(args):
             print
             print 'This operation is permanent and can cause disruption to user SSH access to systems!'
             print
+            print 'The following keys will be deleted for user %s:' % args.user_name
+
+            keys = []
+
+            for key_entry in keys_result[1]:
+
+                key_entry = key_entry[len(consul_user_path)-1:]
+
+                if len(key_entry) > 0:
+                    key_entry = key_entry[1:] if key_entry.startswith('/') else key_entry
+                    key_entry = key_entry[:-1] if key_entry.endswith('/') else key_entry
+
+                    if key_entry == args.host_name or args.host_name is None:
+                        keys.append(key_entry)
+
+            hecate_util.print_columns(keys)
+            print
 
             confirm = raw_input('Confirm delete [y/N]: ').lower() in ['y', 'yes']
 
@@ -60,7 +79,7 @@ def exec_delete(args):
                 exit(0)
 
         if args.host_name is None:
-            log.info('Deleting key at %s' % consul_user_path)
+            log.info('Deleting keys at %s' % consul_user_path)
 
             for key_entry in keys_result[1]:
                 print 'Deleting key at: %s' % key_entry
@@ -68,6 +87,9 @@ def exec_delete(args):
         else:
             log.info('Deleting key at %s' % consul_key_path)
             con.kv.delete(consul_key_path)
+
+        # Ensure that the ssh/authorized_keys path still exists in Consul
+        con.kv.put(consul_ssh_path, None)
 
     except requests.exceptions.ConnectionError as e:
         print 'Failed to connect to Consul host!'
