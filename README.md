@@ -10,10 +10,40 @@ Hecate simlifies the task of distributing ssh public keys in a network.  Hecate 
 
 ## Installation
 ### Install Dependencies
+#### PIP
+```
+sudo apt-get install python-pip
+```
+#### Python Headers
+```
+sudo apt-get install python-dev
+```
 ### Install Hecate
+```
+pinky:ssh-hecate ncfritz$ pwd
+/home/ncfritz/ssh-hecate
+pinky:ssh-hecate ncfritz$ sudo ./install.sh 
+```
 ### Configure Hecate
+```
+pinky:ssh-hecate ncfritz$ sudo hecate config -e --global
+Consul host [IP]: 192.168.0.10
+Consul port: 8500
+Token: 
+Data Center: 
+Verify SSL [y/N]: n
+```
 ### Provision a Key
+```
+pinky:ssh-hecate ncfritz$ hecate provision
+Generating SSH key pair...
+Public key uploaded successfully... user ncfritz is now provisioned for host vmhost-02
+Please allow approximately 3 hours for public key propagation
+```
 ### Run the Daemon
+```
+pinky:ssh-hecate ncfritz$ sudo supervisord -c /usr/local/hecate/etc/supervisord.config 
+```
 
 ## Hecate Commands
 Hecate contains several sub-commands
