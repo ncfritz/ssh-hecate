@@ -5,15 +5,13 @@ if [ "$(id -u)" != "0" ]; then
    exit 1
 fi
 
-SOURCE="${BASH_SOURCE[0]}"
+SOURCE="$0"
 while [ -h "$SOURCE" ]; do
   DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
   SOURCE="$(readlink "$SOURCE")"
   [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE"
 done
 DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
-
-echo $DIR
 
 pip install -r $DIR/requirements.txt > /tmp/hecate-pip.log 2>&1
 
@@ -22,8 +20,7 @@ if [ $? != 0 ]; then
    exit 1
 fi
 
-#HECATE_ROOT=/usr/local/hecate
-HECATE_ROOT=/tmp/hecate
+HECATE_ROOT=/usr/local/hecate
 
 if [ -d "$DIRECTORY" ]; then
     echo "Cleaning up previous install..."
@@ -41,8 +38,8 @@ mkdir -p $HECATE_ROOT/var/output/logs > /dev/null 2>&1
 cp $DIR/bin/* $HECATE_ROOT/bin
 cp $DIR/lib/* $HECATE_ROOT/lib
 
-if [ -f $HECATE_ROOT/etc/supervisord.config ]; then
-    cp $DIR/etc/supervisord.config $HECATE_ROOT/etc
+if [ ! -f $HECATE_ROOT/etc/supervisord.config ]; then
+    cp $DIR/etc/supervisord.config $HECATE_ROOT/etc/supervisord.config
 fi
 
 ln -s $HECATE_ROOT/bin/hecate /usr/local/bin/hecate > /dev/null 2>&1
