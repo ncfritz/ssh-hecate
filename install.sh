@@ -22,7 +22,7 @@ fi
 
 HECATE_ROOT=/usr/local/hecate
 
-if [ -d "$DIRECTORY" ]; then
+if [ -d "$HECATE_ROOT" ]; then
     echo "Cleaning up previous install..."
 
     rm -rf $HECATE_ROOT/bin > /dev/null 2>&1
